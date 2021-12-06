@@ -46,7 +46,7 @@ let day2_2 = () => {
 }
 
 let day3_1 = () => {
-    const data = document.body.textContent.split(/\n/).filter(d=>d.length > 0).map(d=>(d.split('').map(d=>parseInt(d))))
+    const data = document.body.textContent.split(/\n/).filter(d => d.length > 0).map(d => (d.split('').map(d => parseInt(d))))
     const sum = []
     data.forEach(d => {
         d.forEach((d, i) => {
@@ -59,7 +59,7 @@ let day3_1 = () => {
 }
 
 let day3_2 = () => {
-    const data = document.body.textContent.split(/\n/).filter(d=>d.length > 0).map(d=>(d.split('').map(d=>parseInt(d))))
+    const data = document.body.textContent.split(/\n/).filter(d => d.length > 0).map(d => (d.split('').map(d => parseInt(d))))
     const population = (data) => {
         const sum = []
         data.forEach(d => {
@@ -67,17 +67,168 @@ let day3_2 = () => {
                 sum[i] = (sum[i] || 0) + d
             })
         })
-        return sum.map(d => (d===data.length / 2 ? '-' : d > data.length / 2 ? 1 : 0 ))
+        return sum.map(d => (d === data.length / 2 ? '-' : d > data.length / 2 ? 1 : 0))
     }
     const filterdata = (data, bitCriteria) => {
         const bitlength = data[0].length
         let bitPopulation
         for (i = 0; i < bitlength; i++) {
             bitPopulation = population(data)
-            data = data.filter(d => (bitPopulation[i]==='-' ? d[i]===bitCriteria : bitCriteria === 1 ? d[i] === bitPopulation[i] : d[i] !== bitPopulation[i]))
-            if(data.length === 1) break
+            data = data.filter(d => (bitPopulation[i] === '-' ? d[i] === bitCriteria : bitCriteria === 1 ? d[i] === bitPopulation[i] : d[i] !== bitPopulation[i]))
+            if (data.length === 1) break
         }
         return parseInt(data[0].join(''), 2)
     }
-    return filterdata(data, 1) * filterdata(data,0)
+    return filterdata(data, 1) * filterdata(data, 0)
+}
+
+let day4_1 = () => {
+    const input = document.body.textContent.split(/\n\n/).filter(i => i.length > 0)
+    const numbers = input.splice(0, 1)[0].split(',').filter(i => i.length > 0).map(i => parseInt(i, 10))
+    const boards = input.map(b => {
+        return b.split('\n').filter(i => i.length > 0).map(d => (d.match(/.{1,3}/g).map(i => parseInt(i, 10))))
+    })
+    let haveWinner = false
+    let result
+    const markNumber = (number) => {
+        boards.forEach(board => {
+            if (!haveWinner) {
+                board.forEach(row => {
+                    row.forEach((cell, index) => {
+                        if (cell === number) {
+                            row[index] = 'X'
+                        }
+                    })
+                })
+                if (checkForWin(board)) {
+                    haveWinner = true
+                    result = getResult(board, number)
+                }
+            }
+        })
+    }
+    const checkForWin = (board) => {
+        const pivotboard = board.map((_, colIndex) => board.map(row => row[colIndex]))
+        const checklines = [...board, ...pivotboard]
+        return checklines.some(line => {
+            return line.every(cell => (cell === 'X'))
+        })
+    }
+    const getResult = (board, lastnumber) => {
+        const remainingsum = board.map(row => row.filter(cell => !isNaN(cell)).reduce((a, b) => a + b)).reduce((a, b) => a + b)
+        return lastnumber * remainingsum
+    }
+    numbers.forEach(markNumber)
+    return result
+}
+
+let day4_2 = () => {
+    const input = document.body.textContent.split(/\n\n/).filter(i => i.length > 0)
+    const numbers = input.splice(0, 1)[0].split(',').filter(i => i.length > 0).map(i => parseInt(i, 10))
+    const boards = input.map(b => {
+        return b.split('\n').filter(i => i.length > 0).map(d => (d.match(/.{1,3}/g).map(i => parseInt(i, 10))))
+    })
+    let wincount = 0
+    let result
+    const markNumber = (number) => {
+        boards.forEach(board => {
+            if (!board.won) {
+                board.forEach(row => {
+                    row.forEach((cell, index) => {
+                        if (cell === number) {
+                            row[index] = 'X'
+                        }
+                    })
+                })
+                if (checkForWin(board)) {
+                    board.won = true
+                    wincount++
+                    if (wincount === boards.length) {
+                        result = getResult(board, number)
+                    }
+                }
+            }
+        })
+    }
+    const checkForWin = (board) => {
+        const pivotboard = board.map((_, colIndex) => board.map(row => row[colIndex]))
+        const checklines = [...board, ...pivotboard]
+        return checklines.some(line => {
+            return line.every(cell => (cell === 'X'))
+        })
+    }
+    const getResult = (board, lastnumber) => {
+        const remainingsum = board.filter(row => Array.isArray(row)).map(row => row.filter(cell => !isNaN(cell)).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
+        return lastnumber * remainingsum
+    }
+    numbers.forEach(markNumber)
+    return result
+}
+
+let day5_1 = () => {
+    const input = document.body.textContent.split(/\n/)
+        .filter(i => i.length > 0)
+        .map(c => c.split(' -> ')
+            .map(xy => xy.split(',')
+                .map(i => parseInt(i))
+            )
+        )
+    const map = []
+    let increment = (map, x, y) => {
+        if (!Array.isArray(map[x])) {
+            map[x] = []
+        }
+        if (isNaN(map[x][y])) {
+            map[x][y] = 0
+        }
+        map[x][y]++
+    }
+    const drawline = (map, coords) => {
+        if (coords[0][0] === coords[1][0] || coords[0][1] === coords[1][1]) {
+            for (x = Math.min(coords[0][0], coords[1][0]); x <= Math.max(coords[0][0], coords[1][0]); x++) {
+                for (y = Math.min(coords[0][1], coords[1][1]); y <= Math.max(coords[0][1], coords[1][1]); y++) {
+                    increment(map, x, y)
+                }
+            }
+        }
+    }
+    input.forEach(coords => {
+        drawline(map, coords)
+    })
+    const result = map.map(row => row.filter(cell => !isNaN(cell) && cell > 1)).reduce((a, b) => a + b.length, 0)
+    return result
+}
+
+let day5_2 = () => {
+    const input = document.body.textContent.split(/\n/)
+        .filter(i => i.length > 0)
+        .map(c => c.split(' -> ')
+            .map(xy => xy.split(',')
+                .map(i => parseInt(i))
+            )
+        )
+    const map = []
+    let increment = (map, x, y) => {
+        if (!Array.isArray(map[x])) {
+            map[x] = []
+        }
+        if (isNaN(map[x][y])) {
+            map[x][y] = 0
+        }
+        map[x][y]++
+    }
+    const drawline = (map, coords) => {
+        let pointer = coords[0]
+        while (pointer[0] !== coords[1][0] || pointer[1] !== coords[1][1]) {
+            increment(map, pointer[0], pointer[1])
+            pointer[0] += (coords[0][0] === coords[1][0] ? 0 : coords[0][0] < coords[1][0] ? 1 : -1)
+            pointer[1] += (coords[0][1] === coords[1][1] ? 0 : coords[0][1] < coords[1][1] ? 1 : -1)
+        }
+        increment(map, pointer[0], pointer[1])
+    }
+    input.forEach(coords => {
+        drawline(map, coords)
+    })
+    const result = map.map(row => row.filter(cell => !isNaN(cell) && cell > 1)).reduce((a, b) => a + b.length, 0)
+    return result
 }
