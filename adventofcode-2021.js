@@ -232,3 +232,37 @@ let day5_2 = () => {
     const result = map.map(row => row.filter(cell => !isNaN(cell) && cell > 1)).reduce((a, b) => a + b.length, 0)
     return result
 }
+
+let day6_1 = () => {
+    const input = document.body.textContent.replace(/\n/,'').split(',').map(i => parseInt(i, 10))
+    const days = 80
+    for (let i = 0; i < days; i++) {
+        input.forEach((value, index) => {
+            if (value === 0) {
+                input[index] = 6
+                input.push(8)
+            } else {
+                input[index] = value - 1
+            }
+        })
+    }
+    return input.length
+}
+
+let day6_2 = () => {
+    const input = document.body.textContent.replace(/\n/, '').split(',').map(i => parseInt(i, 10))
+    const days = 256
+    const counts = []
+    for(let c = 0; c <= 9; c++) {
+        counts[c] = input.filter(i => i === c).length
+    }
+    for (let i = 0; i < days; i++) {
+        const zeroes = counts[0]
+        for(let c = 0; c <= 8; c++) {
+            counts[c] = counts[c+1]
+        }
+        counts[6] += zeroes
+        counts[8] += zeroes
+    }
+    return counts.reduce((a, b) => a + b, 0)
+}
