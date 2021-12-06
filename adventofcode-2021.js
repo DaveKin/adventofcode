@@ -1,10 +1,15 @@
 let day1_1 = () => {
+    // map the values to 1 when value increases or 0 when not
+    // sum the array values to get the number of increases
     return document.body.textContent.split(/\n/)
         .map((a, i, c) => (parseInt(a) > parseInt(c[i - 1]) ? 1 : 0))
         .reduce((a, b) => (a + b))
 }
 
 let day1_2 = () => {
+    // map the values to the sum of three values per entry
+    // map the values to 1 when value increases or 0 when not
+    // sum the array values to get the number of increases
     return document.body.textContent.split(/\n/)
         .map((a, i, c) => (parseInt(c[i - 1]) + parseInt(a) + parseInt(c[i + 1])))
         .map((a, i, c) => (parseInt(a) > parseInt(c[i - 1]) ? 1 : 0))
@@ -12,6 +17,8 @@ let day1_2 = () => {
 }
 
 let day2_1 = () => {
+    // map the commands to coordinate changes
+    // reduce the changes to final positions
     const position = document.body.textContent.split(/\n/)
         .map(a => {
             const c = a.split(' ')
@@ -29,6 +36,8 @@ let day2_1 = () => {
 }
 
 let day2_2 = () => {
+    // map the commands to coordinate changes
+    // reduce the changes to final positions using 3rd value for 'aim'
     const position = document.body.textContent.split(/\n/)
         .map(a => {
             const c = a.split(' ')
@@ -47,12 +56,14 @@ let day2_2 = () => {
 
 let day3_1 = () => {
     const data = document.body.textContent.split(/\n/).filter(d => d.length > 0).map(d => (d.split('').map(d => parseInt(d))))
+    // sum the number of 1s in each column
     const sum = []
     data.forEach(d => {
         d.forEach((d, i) => {
             sum[i] = (sum[i] || 0) + d
         })
     })
+    // compare the sum to the data length / 2 to find the most popular bit
     const gamma = sum.map(d => (d > data.length / 2 ? 1 : 0)).join('')
     const epsilon = sum.map(d => (d > data.length / 2 ? 0 : 1)).join('')
     return parseInt(gamma, 2) * parseInt(epsilon, 2)
@@ -60,6 +71,7 @@ let day3_1 = () => {
 
 let day3_2 = () => {
     const data = document.body.textContent.split(/\n/).filter(d => d.length > 0).map(d => (d.split('').map(d => parseInt(d))))
+    // sum the number of 1s in each column
     const population = (data) => {
         const sum = []
         data.forEach(d => {
@@ -69,6 +81,7 @@ let day3_2 = () => {
         })
         return sum.map(d => (d === data.length / 2 ? '-' : d > data.length / 2 ? 1 : 0))
     }
+    // filter by bitcriteria
     const filterdata = (data, bitCriteria) => {
         const bitlength = data[0].length
         let bitPopulation
@@ -83,6 +96,8 @@ let day3_2 = () => {
 }
 
 let day4_1 = () => {
+    // split the input into the numbers array and the boards array
+    // each board is an array of number arrays representing the rows
     const input = document.body.textContent.split(/\n\n/).filter(i => i.length > 0)
     const numbers = input.splice(0, 1)[0].split(',').filter(i => i.length > 0).map(i => parseInt(i, 10))
     const boards = input.map(b => {
@@ -90,6 +105,8 @@ let day4_1 = () => {
     })
     let haveWinner = false
     let result
+    // for each board, replace the matched number with 'X'
+    // check for if the board has won, then stop processing and retrun the result
     const markNumber = (number) => {
         boards.forEach(board => {
             if (!haveWinner) {
@@ -107,6 +124,8 @@ let day4_1 = () => {
             }
         })
     }
+    // create an array with the board rows and the columns by pivoting the board
+    // check each line - return true if any line has all Xs
     const checkForWin = (board) => {
         const pivotboard = board.map((_, colIndex) => board.map(row => row[colIndex]))
         const checklines = [...board, ...pivotboard]
@@ -123,6 +142,8 @@ let day4_1 = () => {
 }
 
 let day4_2 = () => {
+    // this time set a 'won' flag to avoid processing a board which has already won
+    // keep a count of the number of winners - when the count is equal to the number of boards, return the result
     const input = document.body.textContent.split(/\n\n/).filter(i => i.length > 0)
     const numbers = input.splice(0, 1)[0].split(',').filter(i => i.length > 0).map(i => parseInt(i, 10))
     const boards = input.map(b => {
@@ -174,6 +195,8 @@ let day5_1 = () => {
             )
         )
     const map = []
+    // increment the value of the map at the coordinates
+    // if there is no value, set to 0 prior to incrementing
     let increment = (map, x, y) => {
         if (!Array.isArray(map[x])) {
             map[x] = []
@@ -183,6 +206,8 @@ let day5_1 = () => {
         }
         map[x][y]++
     }
+    // check if the line is vertical or horizontal
+    // increment the map for each point on the line
     const drawline = (map, coords) => {
         if (coords[0][0] === coords[1][0] || coords[0][1] === coords[1][1]) {
             for (x = Math.min(coords[0][0], coords[1][0]); x <= Math.max(coords[0][0], coords[1][0]); x++) {
@@ -217,6 +242,7 @@ let day5_2 = () => {
         }
         map[x][y]++
     }
+    // re-written drawline function to handle diagonal lines
     const drawline = (map, coords) => {
         let pointer = coords[0]
         while (pointer[0] !== coords[1][0] || pointer[1] !== coords[1][1]) {
@@ -234,6 +260,7 @@ let day5_2 = () => {
 }
 
 let day6_1 = () => {
+    // use the input array and update each value per iteration and add new values
     const input = document.body.textContent.replace(/\n/,'').split(',').map(i => parseInt(i, 10))
     const days = 80
     for (let i = 0; i < days; i++) {
@@ -250,6 +277,8 @@ let day6_1 = () => {
 }
 
 let day6_2 = () => {
+    // calculate the counts of each value in the input array
+    // update the counts per iteration to avoid excessive memory usage
     const input = document.body.textContent.replace(/\n/, '').split(',').map(i => parseInt(i, 10))
     const days = 256
     const counts = []
