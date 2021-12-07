@@ -295,3 +295,33 @@ let day6_2 = () => {
     }
     return counts.reduce((a, b) => a + b, 0)
 }
+
+let day7_1 = () => {
+    const input = document.body.textContent.split(',').filter(i => i.length > 0).map(i=>parseInt(i))
+    const getTotalFuel = (position, input) => {
+        return input.map(p => Math.abs(p - position)).reduce((a, b) => a + b, 0)
+    }
+    const fuelCosts = []
+    // loop through positions an calculate the total fuel cost for each
+    for(position = Math.min(...input); position <= Math.max(...input); position++) {
+        fuelCosts.push(getTotalFuel(position, input))
+    }
+    // return the lowest fuel cost
+    return Math.min(...fuelCosts)
+}
+
+let day7_2 = () => {
+    const input = document.body.textContent.split(',').filter(i => i.length > 0).map(i=>parseInt(i))
+    const getTotalFuel = (position, input) => {
+        return input.map(p => {
+            const moves = Math.abs(p - position)
+            // calculate triangle number for fuel cost
+            return (moves * (moves + 1)) / 2
+        }).reduce((a, b) => a + b, 0)
+    }
+    const fuelCosts = []
+    for(position = Math.min(...input); position <= Math.max(...input); position++) {
+        fuelCosts.push(getTotalFuel(position, input))
+    }
+    return Math.min(...fuelCosts)
+}
