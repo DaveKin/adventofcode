@@ -302,7 +302,7 @@ let day7_1 = () => {
         return input.map(p => Math.abs(p - position)).reduce((a, b) => a + b, 0)
     }
     const fuelCosts = []
-    // loop through positions an calculate the total fuel cost for each
+    // loop through positions and calculate the total fuel cost for each
     for(position = Math.min(...input); position <= Math.max(...input); position++) {
         fuelCosts.push(getTotalFuel(position, input))
     }
@@ -324,4 +324,60 @@ let day7_2 = () => {
         fuelCosts.push(getTotalFuel(position, input))
     }
     return Math.min(...fuelCosts)
+}
+
+let day8_1 = () => {
+    // reduce the second part of the inputs to an array of strings
+    const input = document.body.textContent.split(/\n/).map(d => d.split(' | ')[1]).reduce((a, b) => `${a} ${b}`).split(' ')
+    // map to an array of string lengths
+    const lengths = input.map(i => i.length)
+    // return the number of entries with specific values
+    return lengths.filter(l=>[2,3,4,7].includes(l)).length
+}
+
+let day8_2 = () => {
+    const data = document.body.textContent.split(/\n/).filter(d => d.length > 0)
+    // reduce the inputs to an array of strings for signals and values
+    const input = data.map(d => {
+        const line = d.split(' | ')
+        return {
+            signals: line[0].split(' '),
+            values: line[1].split(' ')
+        }
+    })
+    // return the number of matching characters in two strings
+    const countIntersects = (a, b) => { return a.split('').filter(i => b.split('').includes(i)).length }
+    // deduce the signal key by analysing the length and intersections of each signal
+    const getSignalKey = (signals) => {
+        const key = {}
+        const one = signals.find(s => s.length == 2)
+        key[one] = '1'
+        const four = signals.find(s => s.length == 4)
+        key[four] = '4'
+        const seven = signals.find(s => s.length == 3)
+        key[seven] = '7'
+        const eight = signals.find(s => s.length == 7)
+        key[eight] = '8'
+        const six = signals.find(s => s.length == 6 && countIntersects(s, seven) === 2)
+        key[six] = '6'
+        const nine = signals.find(s => s.length == 6 && countIntersects(s, four) === 4)
+        key[nine] = '9'
+        const zero = signals.find(s => s.length == 6 && ![nine, six].includes(s))
+        key[zero] = '0'
+        const three = signals.find(s => s.length == 5 && countIntersects(s, one) === 2)
+        key[three] = '3'
+        const five = signals.find(s => s.length == 5 && countIntersects(s, six) === 5)
+        key[five] = '5'
+        const two = signals.find(s => s.length == 5 && countIntersects(s, nine) === 4)
+        key[two] = '2'
+        return key
+    }
+    // use the key to transform the values to a single integer
+    const decodeValues = (values, key) => {
+        const findValue = (value, key) => {
+            return key[Object.keys(key).filter(k=>k.length===value.length).find(k => countIntersects(k, value) === value.length)]
+        }
+        return parseInt(values.map(v => findValue(v,key)).join(''))
+    }
+    return input.map(i=>decodeValues(i.values, getSignalKey(i.signals))).reduce((a, b) => a + b, 0)
 }
