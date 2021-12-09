@@ -1,5 +1,3 @@
-const { resourceLimits } = require("worker_threads")
-
 let day1_1 = () => {
     // map the values to 1 when value increases or 0 when not
     // sum the array values to get the number of increases
