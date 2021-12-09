@@ -1,3 +1,5 @@
+const { resourceLimits } = require("worker_threads")
+
 let day1_1 = () => {
     // map the values to 1 when value increases or 0 when not
     // sum the array values to get the number of increases
@@ -261,7 +263,7 @@ let day5_2 = () => {
 
 let day6_1 = () => {
     // use the input array and update each value per iteration and add new values
-    const input = document.body.textContent.replace(/\n/,'').split(',').map(i => parseInt(i, 10))
+    const input = document.body.textContent.replace(/\n/, '').split(',').map(i => parseInt(i, 10))
     const days = 80
     for (let i = 0; i < days; i++) {
         input.forEach((value, index) => {
@@ -282,13 +284,13 @@ let day6_2 = () => {
     const input = document.body.textContent.replace(/\n/, '').split(',').map(i => parseInt(i, 10))
     const days = 256
     const counts = []
-    for(let c = 0; c <= 9; c++) {
+    for (let c = 0; c <= 9; c++) {
         counts[c] = input.filter(i => i === c).length
     }
     for (let i = 0; i < days; i++) {
         const zeroes = counts[0]
-        for(let c = 0; c <= 8; c++) {
-            counts[c] = counts[c+1]
+        for (let c = 0; c <= 8; c++) {
+            counts[c] = counts[c + 1]
         }
         counts[6] += zeroes
         counts[8] += zeroes
@@ -297,13 +299,13 @@ let day6_2 = () => {
 }
 
 let day7_1 = () => {
-    const input = document.body.textContent.split(',').filter(i => i.length > 0).map(i=>parseInt(i))
+    const input = document.body.textContent.split(',').filter(i => i.length > 0).map(i => parseInt(i))
     const getTotalFuel = (position, input) => {
         return input.map(p => Math.abs(p - position)).reduce((a, b) => a + b, 0)
     }
     const fuelCosts = []
     // loop through positions and calculate the total fuel cost for each
-    for(position = Math.min(...input); position <= Math.max(...input); position++) {
+    for (position = Math.min(...input); position <= Math.max(...input); position++) {
         fuelCosts.push(getTotalFuel(position, input))
     }
     // return the lowest fuel cost
@@ -311,7 +313,7 @@ let day7_1 = () => {
 }
 
 let day7_2 = () => {
-    const input = document.body.textContent.split(',').filter(i => i.length > 0).map(i=>parseInt(i))
+    const input = document.body.textContent.split(',').filter(i => i.length > 0).map(i => parseInt(i))
     const getTotalFuel = (position, input) => {
         return input.map(p => {
             const moves = Math.abs(p - position)
@@ -320,7 +322,7 @@ let day7_2 = () => {
         }).reduce((a, b) => a + b, 0)
     }
     const fuelCosts = []
-    for(position = Math.min(...input); position <= Math.max(...input); position++) {
+    for (position = Math.min(...input); position <= Math.max(...input); position++) {
         fuelCosts.push(getTotalFuel(position, input))
     }
     return Math.min(...fuelCosts)
@@ -332,7 +334,7 @@ let day8_1 = () => {
     // map to an array of string lengths
     const lengths = input.map(i => i.length)
     // return the number of entries with specific values
-    return lengths.filter(l=>[2,3,4,7].includes(l)).length
+    return lengths.filter(l => [2, 3, 4, 7].includes(l)).length
 }
 
 let day8_2 = () => {
@@ -375,9 +377,95 @@ let day8_2 = () => {
     // use the key to transform the values to a single integer
     const decodeValues = (values, key) => {
         const findValue = (value, key) => {
-            return key[Object.keys(key).filter(k=>k.length===value.length).find(k => countIntersects(k, value) === value.length)]
+            return key[Object.keys(key).filter(k => k.length === value.length).find(k => countIntersects(k, value) === value.length)]
         }
-        return parseInt(values.map(v => findValue(v,key)).join(''))
+        return parseInt(values.map(v => findValue(v, key)).join(''))
     }
-    return input.map(i=>decodeValues(i.values, getSignalKey(i.signals))).reduce((a, b) => a + b, 0)
+    return input.map(i => decodeValues(i.values, getSignalKey(i.signals))).reduce((a, b) => a + b, 0)
+}
+
+let day9_1 = () => {
+    const input = document.body.textContent
+    const data = input.split('\n').filter(i=>i.length>0).map(d => d.split('').map(i => parseInt(i, 10)))
+    let totalRisk = 0
+    const getRisk = (data, x, y) => {
+        // test each of the surrounding cells
+        const testCoords = [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]]
+        const tests = []
+        testCoords.forEach(i => {
+            if (i[0] >= 0 && i[0] < data[0].length && i[1] >= 0 && i[1] < data.length) {
+                if (data[i[1]][i[0]] <= data[y][x]) {
+                    //not a low spot
+                    tests.push(false)
+                } else {
+                    //could be a low spot
+                    tests.push(true)
+                }
+            }
+        })
+        return tests.every(t=>t) ? data[y][x] + 1 : 0
+    }
+    for (y = 0; y < data.length; y++) {
+        for (x = 0; x < data[0].length; x++) {
+            totalRisk += getRisk(data, x, y)
+        }
+    }
+    return totalRisk
+}
+
+let day9_2 = () => {
+    const input = document.body.textContent
+    const data = input.split('\n').filter(i => i.length > 0).map(d => d.split('').map(i => parseInt(i, 10)))
+    const getTestCoords = (data, x, y) => {
+        const testCoords = []
+        testCoords.push([x - 1, y])
+        testCoords.push([x + 1, y])
+        testCoords.push([x, y - 1])
+        testCoords.push([x, y + 1])
+        return testCoords.filter(i => i[0] >= 0 && i[0] < data[0].length && i[1] >= 0 && i[1] < data.length)
+    }
+    const isLowPoint = (data, x, y) => {
+        // test each of the surrounding cells
+        const tests = []
+        getTestCoords(data, x, y).forEach(i => {
+            if (data[i[1]][i[0]] <= data[y][x]) {
+                //not a low spot
+                tests.push(false)
+            } else {
+                //could be a low spot
+                tests.push(true)
+            }
+        })
+        return tests.every(t=>t)
+    }
+    const growBasin = (data, set, x, y) => {
+        // if the set already has this cell, return
+        if (set.has(`${x}-${y}`)) {
+            return set
+        }
+        //add the point to the set
+        set.add(`${x}-${y}`)
+        //test each of the surrounding cells
+        getTestCoords(data, x, y).forEach(i => {
+            if (data[i[1]][i[0]] !== 9) {
+                //if not a high point, add to the set
+                set = growBasin(data, set, i[0], i[1])
+            }
+        })
+        //return the set
+        return set
+    }
+    const results = []
+    let basin;
+    for (y = 0; y < data.length; y++) {
+        for (x = 0; x < data[0].length; x++) {
+            if (isLowPoint(data, x, y)) {
+                //grow basin from lowpoint
+                basin = growBasin(data, new Set(), x, y)
+                //push basin size to results
+                results.push(basin.size)
+            }
+        }
+    }
+    return results.sort((a, b) => b - a).splice(0,3).reduce((a, b) => a * b)
 }
