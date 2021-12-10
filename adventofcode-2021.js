@@ -526,3 +526,56 @@ const day10_1 = () => {
     // return the sum of the scores for each line
     return data.map(findError).reduce((a, b) => a + b)
 }
+
+const day10_2 = () => {
+    const input = document.body.textContent
+    const data = input.split(/\n/).filter(i => i.length > 0).map(d => d.split(''))
+    const analyse = (data) => {
+        // define the closer for each opener
+        const matchers = {
+            '(': ')',
+            '{': '}',
+            '[': ']',
+            '<': '>'
+        }
+        // determine if the character is a closing character
+        const isCloser = (character) => {
+            return Object.values(matchers).includes(character)
+        }
+        // loop through the data until the end or an error is found
+        let expectedCloser = [], index = 0, foundError = false, character
+        while (index < data.length && !foundError) {
+            character = data[index]
+            if (isCloser(character)) {
+                if (character !== expectedCloser[0]) {
+                    foundError = true
+                    break
+                }
+                // remove the first closer from the expectedCloser array
+                expectedCloser.shift()
+            } else {
+                // character is an opener, add the matching closer to the expectedCloser array
+                expectedCloser.unshift(matchers[character])
+            }
+            index++
+        }
+        // if an error was found, return the score for the error else return 0
+        return foundError ? [] : expectedCloser
+    }
+    // get the score for a set of characters
+    const getScore = (characters) => {
+        const scores = {
+            ')': 1,
+            ']': 2,
+            '}': 3,
+            '>': 4
+        }
+        return characters.map(c => scores[c]).reduce((a, b) => {
+            return (a * 5) + b
+        }, 0)
+    }
+    // get the scores for each line
+    const scores = data.map(analyse).filter(a => a.length > 0).map(getScore)
+    // return the middle score
+    return scores.sort((a,b)=>a-b)[Math.floor(scores.length / 2)]
+}
