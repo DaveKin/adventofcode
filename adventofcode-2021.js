@@ -1,25 +1,28 @@
-let day1_1 = () => {
+const day1_1 = () => {
     // map the values to 1 when value increases or 0 when not
     // sum the array values to get the number of increases
-    return document.body.textContent.split(/\n/)
+    const input = document.body.textContent
+    return input.split(/\n/)
         .map((a, i, c) => (parseInt(a) > parseInt(c[i - 1]) ? 1 : 0))
         .reduce((a, b) => (a + b))
 }
 
-let day1_2 = () => {
+const day1_2 = () => {
     // map the values to the sum of three values per entry
     // map the values to 1 when value increases or 0 when not
     // sum the array values to get the number of increases
-    return document.body.textContent.split(/\n/)
+    const input = document.body.textContent
+    return input.split(/\n/)
         .map((a, i, c) => (parseInt(c[i - 1]) + parseInt(a) + parseInt(c[i + 1])))
         .map((a, i, c) => (parseInt(a) > parseInt(c[i - 1]) ? 1 : 0))
         .reduce((a, b) => (a + b))
 }
 
-let day2_1 = () => {
+const day2_1 = () => {
     // map the commands to coordinate changes
     // reduce the changes to final positions
-    const position = document.body.textContent.split(/\n/)
+    const input = document.body.textContent
+    const position = input.split(/\n/)
         .map(a => {
             const c = a.split(' ')
             switch (c[0]) {
@@ -35,10 +38,11 @@ let day2_1 = () => {
     return position[0] * position[1]
 }
 
-let day2_2 = () => {
+const day2_2 = () => {
     // map the commands to coordinate changes
     // reduce the changes to final positions using 3rd value for 'aim'
-    const position = document.body.textContent.split(/\n/)
+    const input = document.body.textContent
+    const position = input.split(/\n/)
         .map(a => {
             const c = a.split(' ')
             switch (c[0]) {
@@ -54,8 +58,9 @@ let day2_2 = () => {
     return position[0] * position[2]
 }
 
-let day3_1 = () => {
-    const data = document.body.textContent.split(/\n/).filter(d => d.length > 0).map(d => (d.split('').map(d => parseInt(d))))
+const day3_1 = () => {
+    const input = document.body.textContent
+    const data = input.split(/\n/).filter(d => d.length > 0).map(d => (d.split('').map(d => parseInt(d))))
     // sum the number of 1s in each column
     const sum = []
     data.forEach(d => {
@@ -69,8 +74,9 @@ let day3_1 = () => {
     return parseInt(gamma, 2) * parseInt(epsilon, 2)
 }
 
-let day3_2 = () => {
-    const data = document.body.textContent.split(/\n/).filter(d => d.length > 0).map(d => (d.split('').map(d => parseInt(d))))
+const day3_2 = () => {
+    const input = document.body.textContent
+    const data = input.split(/\n/).filter(d => d.length > 0).map(d => (d.split('').map(d => parseInt(d))))
     // sum the number of 1s in each column
     const population = (data) => {
         const sum = []
@@ -95,12 +101,13 @@ let day3_2 = () => {
     return filterdata(data, 1) * filterdata(data, 0)
 }
 
-let day4_1 = () => {
+const day4_1 = () => {
     // split the input into the numbers array and the boards array
     // each board is an array of number arrays representing the rows
-    const input = document.body.textContent.split(/\n\n/).filter(i => i.length > 0)
-    const numbers = input.splice(0, 1)[0].split(',').filter(i => i.length > 0).map(i => parseInt(i, 10))
-    const boards = input.map(b => {
+    const input = document.body.textContent
+    const data = input.split(/\n\n/).filter(i => i.length > 0)
+    const numbers = data.splice(0, 1)[0].split(',').filter(i => i.length > 0).map(i => parseInt(i, 10))
+    const boards = data.map(b => {
         return b.split('\n').filter(i => i.length > 0).map(d => (d.match(/.{1,3}/g).map(i => parseInt(i, 10))))
     })
     let haveWinner = false
@@ -141,12 +148,13 @@ let day4_1 = () => {
     return result
 }
 
-let day4_2 = () => {
+const day4_2 = () => {
     // this time set a 'won' flag to avoid processing a board which has already won
     // keep a count of the number of winners - when the count is equal to the number of boards, return the result
-    const input = document.body.textContent.split(/\n\n/).filter(i => i.length > 0)
-    const numbers = input.splice(0, 1)[0].split(',').filter(i => i.length > 0).map(i => parseInt(i, 10))
-    const boards = input.map(b => {
+    const input = document.body.textContent
+    const data = input.split(/\n\n/).filter(i => i.length > 0)
+    const numbers = data.splice(0, 1)[0].split(',').filter(i => i.length > 0).map(i => parseInt(i, 10))
+    const boards = data.map(b => {
         return b.split('\n').filter(i => i.length > 0).map(d => (d.match(/.{1,3}/g).map(i => parseInt(i, 10))))
     })
     let wincount = 0
@@ -186,8 +194,9 @@ let day4_2 = () => {
     return result
 }
 
-let day5_1 = () => {
-    const input = document.body.textContent.split(/\n/)
+const day5_1 = () => {
+    const input = document.body.textContent
+    const data = input.split(/\n/)
         .filter(i => i.length > 0)
         .map(c => c.split(' -> ')
             .map(xy => xy.split(',')
@@ -217,15 +226,16 @@ let day5_1 = () => {
             }
         }
     }
-    input.forEach(coords => {
+    data.forEach(coords => {
         drawline(map, coords)
     })
     const result = map.map(row => row.filter(cell => !isNaN(cell) && cell > 1)).reduce((a, b) => a + b.length, 0)
     return result
 }
 
-let day5_2 = () => {
-    const input = document.body.textContent.split(/\n/)
+const day5_2 = () => {
+    const input = document.body.textContent
+    const data = input.split(/\n/)
         .filter(i => i.length > 0)
         .map(c => c.split(' -> ')
             .map(xy => xy.split(',')
@@ -252,38 +262,40 @@ let day5_2 = () => {
         }
         increment(map, pointer[0], pointer[1])
     }
-    input.forEach(coords => {
+    data.forEach(coords => {
         drawline(map, coords)
     })
     const result = map.map(row => row.filter(cell => !isNaN(cell) && cell > 1)).reduce((a, b) => a + b.length, 0)
     return result
 }
 
-let day6_1 = () => {
+const day6_1 = () => {
     // use the input array and update each value per iteration and add new values
-    const input = document.body.textContent.replace(/\n/, '').split(',').map(i => parseInt(i, 10))
+    const input = document.body.textContent
+    const data = input.replace(/\n/, '').split(',').map(i => parseInt(i, 10))
     const days = 80
     for (let i = 0; i < days; i++) {
-        input.forEach((value, index) => {
+        data.forEach((value, index) => {
             if (value === 0) {
-                input[index] = 6
-                input.push(8)
+                data[index] = 6
+                data.push(8)
             } else {
-                input[index] = value - 1
+                data[index] = value - 1
             }
         })
     }
-    return input.length
+    return data.length
 }
 
-let day6_2 = () => {
+const day6_2 = () => {
     // calculate the counts of each value in the input array
     // update the counts per iteration to avoid excessive memory usage
-    const input = document.body.textContent.replace(/\n/, '').split(',').map(i => parseInt(i, 10))
+    const input = document.body.textContent
+    const data = input.replace(/\n/, '').split(',').map(i => parseInt(i, 10))
     const days = 256
     const counts = []
     for (let c = 0; c <= 9; c++) {
-        counts[c] = input.filter(i => i === c).length
+        counts[c] = data.filter(i => i === c).length
     }
     for (let i = 0; i < days; i++) {
         const zeroes = counts[0]
@@ -296,7 +308,7 @@ let day6_2 = () => {
     return counts.reduce((a, b) => a + b, 0)
 }
 
-let day7_1 = () => {
+const day7_1 = () => {
     const input = document.body.textContent.split(',').filter(i => i.length > 0).map(i => parseInt(i))
     const getTotalFuel = (position, input) => {
         return input.map(p => Math.abs(p - position)).reduce((a, b) => a + b, 0)
@@ -310,7 +322,7 @@ let day7_1 = () => {
     return Math.min(...fuelCosts)
 }
 
-let day7_2 = () => {
+const day7_2 = () => {
     const input = document.body.textContent.split(',').filter(i => i.length > 0).map(i => parseInt(i))
     const getTotalFuel = (position, input) => {
         return input.map(p => {
@@ -326,7 +338,7 @@ let day7_2 = () => {
     return Math.min(...fuelCosts)
 }
 
-let day8_1 = () => {
+const day8_1 = () => {
     // reduce the second part of the inputs to an array of strings
     const input = document.body.textContent.split(/\n/).map(d => d.split(' | ')[1]).reduce((a, b) => `${a} ${b}`).split(' ')
     // map to an array of string lengths
@@ -335,7 +347,7 @@ let day8_1 = () => {
     return lengths.filter(l => [2, 3, 4, 7].includes(l)).length
 }
 
-let day8_2 = () => {
+const day8_2 = () => {
     const data = document.body.textContent.split(/\n/).filter(d => d.length > 0)
     // reduce the inputs to an array of strings for signals and values
     const input = data.map(d => {
@@ -382,9 +394,9 @@ let day8_2 = () => {
     return input.map(i => decodeValues(i.values, getSignalKey(i.signals))).reduce((a, b) => a + b, 0)
 }
 
-let day9_1 = () => {
+const day9_1 = () => {
     const input = document.body.textContent
-    const data = input.split('\n').filter(i=>i.length>0).map(d => d.split('').map(i => parseInt(i, 10)))
+    const data = input.split('\n').filter(i => i.length > 0).map(d => d.split('').map(i => parseInt(i, 10)))
     let totalRisk = 0
     const getRisk = (data, x, y) => {
         // test each of the surrounding cells
@@ -401,7 +413,7 @@ let day9_1 = () => {
                 }
             }
         })
-        return tests.every(t=>t) ? data[y][x] + 1 : 0
+        return tests.every(t => t) ? data[y][x] + 1 : 0
     }
     for (y = 0; y < data.length; y++) {
         for (x = 0; x < data[0].length; x++) {
@@ -411,7 +423,7 @@ let day9_1 = () => {
     return totalRisk
 }
 
-let day9_2 = () => {
+const day9_2 = () => {
     const input = document.body.textContent
     const data = input.split('\n').filter(i => i.length > 0).map(d => d.split('').map(i => parseInt(i, 10)))
     const getTestCoords = (data, x, y) => {
@@ -434,7 +446,7 @@ let day9_2 = () => {
                 tests.push(true)
             }
         })
-        return tests.every(t=>t)
+        return tests.every(t => t)
     }
     const growBasin = (data, set, x, y) => {
         // if the set already has this cell, return
@@ -454,7 +466,7 @@ let day9_2 = () => {
         return set
     }
     const results = []
-    let basin;
+    let basin
     for (y = 0; y < data.length; y++) {
         for (x = 0; x < data[0].length; x++) {
             if (isLowPoint(data, x, y)) {
@@ -465,5 +477,52 @@ let day9_2 = () => {
             }
         }
     }
-    return results.sort((a, b) => b - a).splice(0,3).reduce((a, b) => a * b)
+    //return the 3 largest sizes multiplied together
+    return results.sort((a, b) => b - a).splice(0, 3).reduce((a, b) => a * b)
+}
+
+const day10_1 = () => {
+    const input = document.body.textContent
+    const data = input.split(/\n/).filter(i => i.length > 0).map(d => d.split(''))
+    const findError = (data) => {
+        // define the closer for each opener
+        const matchers = {
+            '(': ')',
+            '{': '}',
+            '[': ']',
+            '<': '>'
+        }
+        // define the score for each syntax error
+        const scores = {
+            ')': 3,
+            ']': 57,
+            '}': 1197,
+            '>': 25137
+        }
+        // determine if the character is a closing character
+        const isCloser = (character) => {
+            return Object.values(matchers).includes(character)
+        }
+        // loop through the data until the end or an error is found
+        let expectedCloser = [], index = 0, foundError = false, character
+        while (index < data.length && !foundError) {
+            character = data[index]
+            if (isCloser(character)) {
+                if (character !== expectedCloser[0]) {
+                    foundError = character
+                    break
+                }
+                // remove the first closer from the expectedCloser array
+                expectedCloser.shift()
+            } else {
+                // character is an opener, add the matching closer to the expectedCloser array
+                expectedCloser.unshift(matchers[character])
+            }
+            index++
+        }
+        // if an error was found, return the score for the error else return 0
+        return !foundError ? 0 : scores[foundError]
+    }
+    // return the sum of the scores for each line
+    return data.map(findError).reduce((a, b) => a + b)
 }
